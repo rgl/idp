@@ -17,22 +17,25 @@ if (@$_POST['login']) {
 
     if ($pass != 'password' || !$identity) {
         $errors[]= 'Unknown user or password.';
-    } elseif ($redirect_url) {
+    } else {
         # store the user in the user-agent session.
         session_start();
         $_SESSION['user'] = $user;
 
         $log->debug("successful login $user");
-        header('HTTP/1.0 302 Go gadget go!');
-        header("Location: $redirect_url");
-        header('Content-type: text/plain; charset=UTF-8');
-        echo 'Your User-Agent should have redirected you!';
-        exit;
-    } else {
-    	# no redirect_url?!  Oh well, leave the user here.
-        header('Content-type: text/plain; charset=UTF-8');
-        echo "You are successfully logged in, but there was no redirect_url variable, so you are stuck here.";
-        exit;
+
+        if ($redirect_url) {
+            header('HTTP/1.0 302 Go gadget go!');
+            header("Location: $redirect_url");
+            header('Content-type: text/plain; charset=UTF-8');
+            echo 'Your User-Agent should have redirected you!';
+            exit;
+        } else {
+            # no redirect_url?!  Oh well, leave the user here.
+            header('Content-type: text/plain; charset=UTF-8');
+            echo "You are successfully logged in, but there was no redirect_url variable, so you are stuck here.";
+            exit;
+        }
     }
 }
 
