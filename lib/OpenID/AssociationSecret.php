@@ -252,12 +252,12 @@ class OpenID_AssociationSecret
         return OpenID_Config::get('idp.association.lifetime');
     }
 
-    private function db()
+    static private function db()
     {
         return OpenID_Config::db();
     }
 
-    private function table($name)
+    static private function table($name)
     {
         return OpenID_Config::get('db.table.prefix').$name;
     }

@@ -124,7 +124,7 @@ class OpenID_Provider
         } catch (Exception $e) {
             $log->fatal('Oops', $e);
             if (!headers_sent()) {
-              header('HTTP/1.0 500 Internal Server Error');
+                header('HTTP/1.0 500 Internal Server Error');
                 header('Content-Type: text/plain; charset=UTF-8');
                 echo "Oh oh... my underpants are wet now...\n";
                 # only unleash on development.

@@ -4,15 +4,20 @@ require_once('OpenID/UserSession.php');
 
 class OpenID_UserSessionTest extends MyTestCase
 {
+    function setUp()
+    {
+        $this->session = OpenID_UserSession::create();
+    }
+
     function tearDown()
     {
-    	OpenID_UserSession::destroy();
+        $this->session->destroy();
+        $this->session = null;
     }
 
     function testCreate()
     {
-        $session = OpenID_UserSession::create();
-        $this->assertEquals(0, count($session->all()));
+        $this->assertEquals(0, count($this->session->all()));
         $this->assertEquals(
             true,
             array_key_exists(
@@ -23,26 +28,25 @@ class OpenID_UserSessionTest extends MyTestCase
 
     function testOpen()
     {
-        $session = OpenID_UserSession::create();
-        $session->set('key', 'value');
+	$_SESSION['user'] = 'test';
+        $this->session->set('key', 'value');
         $s1 = OpenID_UserSession::open();
+	unset($_SESSION['user']);
         $s1->set('key2', 'value2');
-        $this->assertEquals(array('key', 'key2'), $session->all());
+        $this->assertEquals(array('key', 'key2'), $this->session->all());
         $this->assertEquals(array('key', 'key2'), $s1->all());
     }
 
     function testSet()
     {
-        $session = OpenID_UserSession::create();
-        $session->set('key', 'value');
-        $this->assertEquals('value', $session->get('key'));
-        $this->assertEquals(array('key'), $session->all());
+        $this->session->set('key', 'value');
+        $this->assertEquals('value', $this->session->get('key'));
+        $this->assertEquals(array('key'), $this->session->all());
     }
 
     function testDestroy()
     {
-        $session = OpenID_UserSession::create();
-        $session->destroy();
+        $this->session->destroy();
         $this->assertEquals(
             false,
             array_key_exists(
