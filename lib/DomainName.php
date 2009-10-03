@@ -103,7 +103,7 @@ class DomainName
      *
      * @return array array of string with the TLDs
      */
-    private function tlds()
+    static private function tlds()
     {
         if (!self::$tlds) {
             $tlds = array();

@@ -15,12 +15,11 @@ ini_set(
 require_once(dirname(__FILE__).'/../config/config.php');
 
 require_once('PHPUnit/Framework.php');
-require_once('PHPUnit/Extensions/ExceptionTestCase.php');
 require_once('OpenID/QueryString.php');
 
 # Use a application wide testcase class so we can modify it globablly if
 # needed.
-class MyTestCase extends PHPUnit_Extensions_ExceptionTestCase
+class MyTestCase extends PHPUnit_Framework_TestCase
 {
 }
 
@@ -79,7 +78,7 @@ class MyWebTestCase extends MyTestCase
                     break;
 
                  default:
-                    throw new IllegalArgumentException('Unknown  HTTP method');
+                    throw new IllegalArgumentException('Unknown HTTP method');
             }
 
             #curl_setopt_array($c, $options);

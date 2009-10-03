@@ -78,7 +78,7 @@ class OpenID_UserSession
     {
         $log = OpenID_Config::logger();
         # refrain from openning a session when we are unit testing this.
-        if (!headers_sent()) {
+        if (!headers_sent() && !session_id()) {
             $log->debug('starting PHP session to create user session');
             session_start();
         }
@@ -89,14 +89,11 @@ class OpenID_UserSession
 
     /**
      * Destroys the session.
-     *
-     * NB: This is also a static function.
      */
     public function destroy()
     {
         unset($_SESSION[self::PHP_SESSION_KEY]);
-        if (isset($this))
-            $this->data = null;
+        $this->data = null;
     }
 
     /** @return array array of string with all the data keys stored in this session */
