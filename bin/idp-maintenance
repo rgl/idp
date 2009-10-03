@@ -1,0 +1,14 @@
+#!/usr/bin/php
+<?php
+# this script runs the maintenance tasks needed to keep the IdP in shape.
+
+$options = getopt('g:');
+
+if (!array_key_exists('g', $options))
+    die("Syntax: idp-maintenance -g path/to/global.php\n");
+
+require_once($options['g']);
+require_once('OpenID/AssociationSecret.php');
+
+OpenID_AssociationSecret::destroyExpired();
+?>

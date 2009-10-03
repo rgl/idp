@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<project name="IdP" basedir="." default="test">
+    <!-- See http://www.phpunit.de/pocket_guide/3.0/en/phing.html -->
+
+    <property name="path.doc.api" value="doc/api"/>
+    <property name="path.doc.coverage" value="doc/coverage"/>
+
+    <!-- TODO create a target for packing this application into a
+         tarball.  See the build.xml from phing sources. -->
+
+    <target name="prepare">
+        <mkdir dir="${path.doc.api}"/>
+        <mkdir dir="${path.doc.coverage}"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="${path.doc.api}"/>
+        <delete dir="${path.doc.coverage}"/>
+        <delete file="log/idp.log"/>
+    </target>
+
+    <target name="doc-api" depends="prepare">
+        <delete dir="${path.doc.api}"/>
+        <exec
+            command="phpdoc --sourcecode on --target ${path.doc.api} --title 'IdP API Documentation' -d lib"
+            passthru="true"
+            checkreturn="true"
+            />
+    </target>
+
+    <target name="doc-coverage" depends="prepare">
+        <delete dir="${path.doc.coverage}"/>
+        <exec
+            command="phing doc-coverage"
+            dir="test"
+            passthru="true"
+            checkreturn="true"
+            />
+    </target>
+
+    <target name="test">
+        <phpunit haltonfailure="true" printsummary="true">
+            <batchtest>
+                <fileset dir="test">
+                    <include name="**/*Test.php"/>
+                </fileset>
+            </batchtest>
+        </phpunit>
+    </target>
+</project>

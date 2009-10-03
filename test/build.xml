@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<project name="IdP" basedir="." default="test">
+    <property name="path.doc.coverage" value="../doc/coverage"/>
+
+    <target name="prepare">
+        <mkdir dir="${path.doc.coverage}"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="${path.doc.coverage}"/>
+    </target>
+
+    <target name="doc-coverage" depends="prepare">
+        <exec
+            command="phpunit --report ${path.doc.coverage} AllTests.php"
+            dir="."
+            passthru="true"
+            checkreturn="true"
+            />
+    </target>
+
+    <target name="test">
+        <phpunit haltonfailure="true" printsummary="true">
+            <batchtest>
+                <fileset dir=".">
+                    <include name="**/*Test.php"/>
+                </fileset>
+            </batchtest>
+        </phpunit>
+    </target>
+</project>

@@ -1,0 +1,33 @@
+@import url(global.css);
+
+#page h2 {
+	background: url(../i/h_persona.png) no-repeat;
+	height: 39px;
+	width: 270px;
+	text-indent: -9999px;
+	}
+
+#persona-fields {
+	border: 1px #ccc solid;
+	}
+#persona-fields legend {
+	margin-left: 12px;
+	}
+#persona-fields table {
+	margin: 12px;
+	width: 654px;
+	}
+#persona-fields th {
+	text-align: right;
+	padding-right: 5px;
+	}
+#persona-fields th, #persona-fields td {
+	padding: 0 0 5px 0;
+	width: 100%;
+	}
+#persona-fields input {
+    width: 20em;
+    }
+#persona-fields #default {
+    width: auto;
+    }
