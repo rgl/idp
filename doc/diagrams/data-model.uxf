@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><umlet_diagram><element><type>com.umlet.element.base.Class</type><coordinates><x>320</x><y>260</y><w>180</w><h>90</h></coordinates><panel_attributes>association_secret
+--
+_id : uint [PK]_
+expires_at : int
+secret : string</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.base.Class</type><coordinates><x>30</x><y>220</y><w>170</w><h>250</h></coordinates><panel_attributes>persona
+--
+_id : uint [PK]_
+name : string [AK]
+sr_nickname : string
+sr_email : string
+sr_fullname : string
+sr_dob_year : int
+sr_dob_month : int
+sr_dob_day : int
+sr_gender : char
+sr_postalcode : string
+sr_country : string
+sr_language : string
+sr_timezone : string</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.base.Class</type><coordinates><x>320</x><y>20</y><w>180</w><h>100</h></coordinates><panel_attributes>trust_root
+--
+_id : uint [PK]_
+trust_root : string [AK]
+auto_approve : boolean
+approve_count : uint</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>180</x><y>60</y><w>160</w><h>190</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+m1=0..1
+r1=persona_id
+m2=*</panel_attributes><additional_attributes>20;170;140;20</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>180</x><y>30</y><w>160</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
+r1=identity_id
+m1=1
+m2=*</panel_attributes><additional_attributes>20;20;140;20</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>134</x><y>100</y><w>72</w><h>140</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
+r1=identity_id
+m1=1
+m2=*</panel_attributes><additional_attributes>36;20;36;120</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>15</x><y>100</y><w>130</w><h>140</h></coordinates><panel_attributes>lt=-&gt;
+r2=default_persona_id</panel_attributes><additional_attributes>65;20;65;120</additional_attributes></element><element><type>com.umlet.element.base.Class</type><coordinates><x>30</x><y>20</y><w>170</w><h>100</h></coordinates><panel_attributes>identity
+--
+_id : uint [PK]_
+identity : string [AK]
+username : string [AK]</panel_attributes><additional_attributes/></element></umlet_diagram>

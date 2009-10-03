@@ -1,0 +1,8 @@
+@import url(global.css);
+
+#page h2 {
+	background: url(../i/h_login.png) no-repeat;
+	height: 39px;
+	width: 94px;
+	text-indent: -9999px;
+	}

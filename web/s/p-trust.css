@@ -1,0 +1,39 @@
+@import url(global.css);
+
+#page h2 {
+	background: url(../i/h_trust.png) no-repeat;
+	height: 39px;
+	width: 95px;
+	text-indent: -9999px;
+	}
+
+#persona .invalid {
+	color: red;
+	font-style: italic;
+	}
+#persona-fields {
+	border: 1px #ccc solid;
+	}
+#persona-fields .required {
+	font-weight: bold;
+	}
+#persona-fields legend {
+	margin-left: 12px;
+	}
+#persona-fields .optional {
+	font-weight: normal;
+	}
+#persona-fields table {
+	margin: 12px;
+	width: 654px;
+	}
+#persona-fields th {
+	text-align: right;
+	padding-right: 5px;
+	}
+#persona-fields td {
+	width: 100%;
+	}
+#question {
+	font-size: larger;
+	}
