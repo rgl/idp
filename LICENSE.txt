@@ -1,0 +1,3 @@
+This work is published under the LGPLv3 license by Rui Lopes.
+
+See http://www.gnu.org/licenses/lgpl-3.0.txt
