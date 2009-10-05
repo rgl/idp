@@ -118,6 +118,8 @@ class DomainName
             if (in_array(OpenID_Config::profile(), array('test', 'development'))) {
                 $tlds['example'] = true;
                 $tlds['localhost'] = true;
+                $tlds['lan'] = true;
+                $tlds['local'] = true;
             }
             self::$tlds = $tlds;
         }
