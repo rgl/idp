@@ -249,6 +249,89 @@ class IdPTest extends MyWebTestCase
         $this->assertEquals($signature, $data['sig']);
     }
 
+    # make sure the current logged in user owns the asserted openid.
+    # we will login as test-alice and try to use the openid:
+    #   http://localhost/prototype/id.php/test-approve-always 
+    # which is not owned by test-alice.  the IdP MUST NOT allow this.
+    # we will use the automatic login trust root:
+    #   http://localhost/wordpress/
+    #
+    # this tests the whole shebang:
+    #  1. associate
+    #  2. authenticate through login page as test-alice
+    #  3. checkid_setup:
+    #       openid: test-approve-always
+    #       trust root: http://localhost/wordpress/
+    #     This MUST fail because test-alice does not own
+    #     the test-approve-always oid.
+    function testCheckIDSetupWithAssociationAndOidNotOwnedByLoggedInUser()
+    {
+        $log = OpenID_Config::logger();
+        $log->debug('Unit Test IdpTest.testCheckIDSetupWithAssociationAndOidNotOwnedByLoggedInUser');
+
+        # act 1.  associate.
+        $log->debug('1. associate');
+        $parameters = array(
+            'X-APP_PROFILE' => 'test',
+            'openid.mode' => 'associate',
+            'openid.dh_consumer_public' => self::CONSUMER_YA
+        );
+        $body = $this->post(OpenID_Config::providerUrl(), $parameters);
+        $this->assertStatus(200);
+        $this->assertContentType('text/plain; charset=UTF-8');
+        $akv = OpenID_KeyValue::decode($body);
+        $this->assertArrayHasKey('mac_key', $akv);
+        $this->assertArrayHasKey('assoc_handle', $akv);
+        $this->assertArrayHasKey('assoc_type', $akv);
+        $mac_key = Base64::decode($akv['mac_key']);
+        $assoc_handle = $akv['assoc_handle'];
+        $assoc_type = $akv['assoc_type'];
+
+
+        # act 2.  authenticate through login page.
+        # send user credentials to the login page.  Which should
+        # redirect back to the IdP page.
+        # NB: This works, because we assume the IdP will ask right away
+        #     the password.
+        $log->debug('2. authenticate through login page');
+        $parameters = array(
+            'X-APP_PROFILE' => 'test',
+            'user' => 'test-alice',
+            'password' => 'password',
+            'login' => 'Login',
+            'redirect_url' => 'http://localhost/'
+        );
+        $body = $this->post(OpenID_Config::loginUrl(), $parameters);
+        $this->assertStatus(302);
+        $this->assertContentType('text/plain; charset=UTF-8');
+        # make sure cookies are sent.
+        $this->assertNotSame(null, $this->header('set-cookie'));
+        $location = $this->header('location');
+
+        # act 3.  checkid_setup (authenticated).
+        # checkid_setup;  should fail because we have authenticated as
+        # test-alice but we are trying to assert that it owns the
+        # test-approve-always openid which it does not own.
+        $log->debug('2. checkid_setup (authenticated)');
+        $trust_root = 'http://localhost/wordpress/';
+        $return_to = $trust_root.'login?nonce=1234';
+        $setup_parameters = array(
+            'X-APP_PROFILE'       => 'test',
+            'openid.mode'         => 'checkid_setup',
+            'openid.identity'     => OpenID_Config::identityUrl('test-approve-always'),
+            'openid.assoc_handle' => $assoc_handle,
+            'openid.return_to'    => $return_to,
+            # optional.  defaults to return_to.
+            'openid.trust_root'   => $trust_root
+        );
+        $this->get(OpenID_Config::providerUrl(), $setup_parameters);
+        # make sure this has failed.
+        $this->assertStatus(400);
+        # make sure cookies are NOT sent.
+        $this->assertEquals(null, $this->header('set-cookie'));
+        $location = $this->header('location');
+    }
+
     function testCheckIDImmediateWithoutEndUserLogin()
     {
         # do an association first.

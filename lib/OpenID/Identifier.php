@@ -97,7 +97,7 @@ class OpenID_Identifier
      */
     function username()
     {
-        return $this->identity;
+        return $this->username;
     }
 
     /**
