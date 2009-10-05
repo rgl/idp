@@ -137,13 +137,9 @@ This will place the documentation at "doc/api/index.html".
 
 = Source code
 
-The code is maintained in a subversion repository located at:
+The code is maintained in a mercurial repository located at:
 
-  https://calipo.clustercube.com/svn/rgl-idp/
-
-There is also a trac instance for managing this project at:
-
-  https://calipo.clustercube.com/trac/rgl-idp/
+  http://bitbucket.org/rgl/idp/
 
 
 The source code is marked with "TODO" and "XXX" comments.  These mark
