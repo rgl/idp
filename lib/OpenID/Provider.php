@@ -146,6 +146,26 @@ class OpenID_Provider
     }
 
     /**
+     * Tests whether the current logged in user owns the given identity.
+     */
+    private function loggedInUserOwnsIdentity($identity)
+    {
+        $user = OpenID_User::loggedIn();
+        return $user && $user->name() == $identity->username();
+    }
+
+    /**
+     * Make sure the current logged in user owns the given identity.
+     *
+     * throws an Exception when the current user does not own the identity.
+     */
+    private function assertLoggedInUserOwnsIdentity($identity)
+    {
+        if (!$this->loggedInUserOwnsIdentity($identity))
+            throw new IllegalArgumentException('identity is not owned by logged in user');
+    }
+
+    /**
      * Handles an Open ID request.
      *
      * Returns an array with three items:
@@ -311,7 +331,8 @@ class OpenID_Provider
         # Claimed Identifier.
         $identity = OpenID_Identifier::findByIdentity(@$request['identity']);
         if (!$identity || $identity->disabled())
-            throw new IllegalArgumentException('identity is unkown');
+            throw new IllegalArgumentException('identity is unknown');
+
 
         # TODO screen identity to make sure its one managed by us.
         # Optional.  The assoc_handle from the associate request.
@@ -328,18 +349,21 @@ class OpenID_Provider
         # TODO screen trust_root!  which is the Consumer address.
         # TODO return_to URL MUST descend from the openid.trust_root
 
-        # only accept it iff the user is trusting the consumer.
-        $isTrusted = $identity->trusts($trust_root);
+        # only accept it iff the user owns the identity and is
+        # trusting the consumer.
+        $isTrusted = $this->loggedInUserOwnsIdentity($identity) && $identity->trusts($trust_root);
         if ($isTrusted) {
             $session = OpenID_UserSession::open();
         } else {
             $session = null;
         }
 
-        if (!$isTrusted || !$session) {
+        if (!$session) {
+            # the user does not own the identity.
+            # OR
             # the user didn't trust the consumer.
             # OR
-          # no user session.  we can't create one either because
+            # no user session.  we can't create one either because
             # we are on immediate mode, so just bail and say nay.
             $response = array();
             $response['mode'] = 'id_res';
@@ -462,6 +486,8 @@ class OpenID_Provider
                 'I don\'t talk to strangers!'
             );
         }
+
+        $this->assertLoggedInUserOwnsIdentity($identity);
 
         # see if the user trusts trust_root.  If he doesn't, cancel
         # the request.
